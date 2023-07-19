@@ -1,0 +1,22 @@
+
+.row {
+    display: flex;
+    justify-content: center;
+
+    .row-letter {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border: 2px solid #dee1e9;
+        font-size: 28px;
+        font-weight: 700;
+        height: 56px;
+        margin: 3px;
+        text-transform: uppercase;
+        width: 56px;
+        border-radius: 5px;
+        color: #393e4c;
+        background-color: #fbfcff;
+        font-family: 'Josefin Sans', sans-serif;
+    }
+}

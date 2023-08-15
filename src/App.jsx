@@ -3,9 +3,9 @@ import React  from 'react';
 import { Routes, Route } from "react-router-dom"
 
 import './App.scss';
-import HomePage from './HomePage';
-import Solo from './Solo';
-import Multiple from './Multiple';
+import HomePage from './pages/HomePage';
+import Solo from './pages/Solo';
+import Multiple from './pages/Multiple';
 
 function App() {
   return (

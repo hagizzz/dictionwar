@@ -49,7 +49,6 @@ export const keyPress = createAsyncThunk(
         if (key === 'Enter') {
             const string = joinRow(wordTable, currentRow)
             const res = await axios.get(`http://localhost:3000/words/${string}`)
-            console.log({string})
             
             if (res.data.code === 200) {
                 wordTable[currentRow].forEach((element, index) => {
@@ -58,6 +57,7 @@ export const keyPress = createAsyncThunk(
                             index: index,
                             value: 1
                         }))
+                        //console.log(wordTable[currentRow].randomWord[index]) 
                         
                     }
                     else if (randomWord.includes(wordTable[currentRow][index].word)) {
@@ -71,7 +71,9 @@ export const keyPress = createAsyncThunk(
                             index: index,
                             value: 3
                         }))
-                    }    
+                    } 
+                    
+                       
                 })
                 dispatch(incrementCurrentRow())
             } else console.log('Not found')
@@ -121,7 +123,10 @@ const wordTableSlice = createSlice({
             const index = action.payload.index
             const value = action.payload.value
             state.wordTable[state.currentRow][index].status = value
-        }
+        },
+        // removeCharacter: (state, action) => {
+        //     state.randomWord = action.payload
+        // }
     }
 })
 

@@ -25,15 +25,18 @@ function WordleGame() {
         if (status === 0) {
             return 'row-letter default-cell'
         } 
+
         else if (status === 1) {
-            return 'row-letter green-cell'
+            return 'row-letter gray-cell'
         }
         else if (status === 2) {
             return 'row-letter yellow-cell'
         }
         else if (status === 3) {
-            return 'row-letter gray-cell'
+            return 'row-letter green-cell'
         }
+        
+        
     }
 
     return (

@@ -12,10 +12,24 @@ const INITIAL_STATE = {
                 .fill(0)
                 .map(_ => ({ word: '', status: 0 })
             )),
+    keyboardTable: 
+        [
+            ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+            ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+            ['Delete', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Enter']
+        ].map(row => {
+            return row.map(letter => {
+                return {
+                    key: letter,
+                    status: 0,
+                }
+            })
+        }),
     currentRow: 0,
     errorMessage: '',
     randomWord: ''
 }
+
 
 const joinRow = (wordTable, currentRow) => {
     let string = ''
@@ -60,17 +74,18 @@ export const keyPress = createAsyncThunk(
                     let letter = wordTable[currentRow][index].word
 
                     if (letter === randomWord[index]) {
-                        wordTable[currentRow][index].status = 1
+                        wordTable[currentRow][index].status = 3
                         dispatch(setStatus({
                             index: index,
-                            value: 1
+                            value: 3,
+                            letter: letter,
                         }))
                         randomWord = randomWord.slice(0, index) + '@' + randomWord.slice(index + 1, randomWord.length)
                     }
                 })
 
                 wordTable[currentRow].forEach((element, index) => {
-                    if (wordTable[currentRow][index].status === 1) return;
+                    if (wordTable[currentRow][index].status === 3) return;
 
                     let letter = wordTable[currentRow][index].word
                     let foundIndex = randomWord.indexOf(letter)
@@ -78,14 +93,16 @@ export const keyPress = createAsyncThunk(
                     if (foundIndex !== -1) {
                         dispatch(setStatus({
                             index: index,
-                            value: 2
+                            value: 2,
+                            letter: letter,
                         }))
                         randomWord = randomWord.slice(0, foundIndex) + '@' + randomWord.slice(foundIndex + 1, randomWord.length)
                     }
                     else if (!randomWord.includes(letter)) {
                         dispatch(setStatus({
                             index: index,
-                            value: 3
+                            value: 1,
+                            letter: letter
                         }))
                     }
                 })
@@ -137,7 +154,17 @@ const wordTableSlice = createSlice({
         setStatus: (state, action) => {
             const index = action.payload.index
             const value = action.payload.value
+            const letter = action.payload.letter
             state.wordTable[state.currentRow][index].status = value
+            for(let i = 0; i < state.keyboardTable.length; i++) {
+                for (let j = 0; j < state.keyboardTable[i].length; j++) {
+                    let cell = state.keyboardTable[i][j]
+                    if (cell.key === letter && cell.status < value) {
+                        state.keyboardTable[i][j].status = value
+                    }
+                        
+                }
+            }
         },
         
     }

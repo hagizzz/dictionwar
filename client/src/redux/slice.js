@@ -42,43 +42,58 @@ export const keyPress = createAsyncThunk(
     async (key, thunkAPI) => {
         const { dispatch } = thunkAPI
         const { addWord, incrementCurrentRow, setStatus } = wordTableSlice.actions
-        const { wordTable, currentRow } = thunkAPI.getState().wordStore
-        const { randomWord } = thunkAPI.getState().wordStore
+        let { wordTable, currentRow } = thunkAPI.getState().wordStore
+        wordTable = JSON.parse(JSON.stringify(wordTable))
+        let { randomWord } = thunkAPI.getState().wordStore
         dispatch(addWord(key))
-       
-        if (key === 'Enter') {
-            const string = joinRow(wordTable, currentRow)
-            const res = await axios.get(`http://localhost:3000/words/${string}`)
-            
-            if (res.data.code === 200) {
+
+        try {
+            if (key === 'Enter') {
+                const string = joinRow(wordTable, currentRow)
+                const res = await axios.get(`http://localhost:3000/words/${string}`)
+                
+                if (res.data.code !== 200) {
+                    return console.log('Not found')
+                }
+
                 wordTable[currentRow].forEach((element, index) => {
-                    if(wordTable[currentRow][index].word === randomWord[index]) {
+                    let letter = wordTable[currentRow][index].word
+
+                    if (letter === randomWord[index]) {
+                        wordTable[currentRow][index].status = 1
                         dispatch(setStatus({
                             index: index,
                             value: 1
                         }))
-                        //console.log(wordTable[currentRow].randomWord[index]) 
-                        
+                        randomWord = randomWord.slice(0, index) + '@' + randomWord.slice(index + 1, randomWord.length)
                     }
-                    else if (randomWord.includes(wordTable[currentRow][index].word)) {
+                })
+
+                wordTable[currentRow].forEach((element, index) => {
+                    if (wordTable[currentRow][index].status === 1) return;
+
+                    let letter = wordTable[currentRow][index].word
+                    let foundIndex = randomWord.indexOf(letter)
+
+                    if (foundIndex !== -1) {
                         dispatch(setStatus({
                             index: index,
                             value: 2
                         }))
+                        randomWord = randomWord.slice(0, foundIndex) + '@' + randomWord.slice(foundIndex + 1, randomWord.length)
                     }
-                    else if (!randomWord.includes(wordTable[currentRow][index].word)) {
+                    else if (!randomWord.includes(letter)) {
                         dispatch(setStatus({
                             index: index,
                             value: 3
                         }))
-                    } 
-                    
-                       
+                    }
                 })
                 dispatch(incrementCurrentRow())
-            } else console.log('Not found')
+            }
+        } catch(err) {
+            console.log(err)
         }
-        
     }
 )
 
@@ -124,9 +139,7 @@ const wordTableSlice = createSlice({
             const value = action.payload.value
             state.wordTable[state.currentRow][index].status = value
         },
-        // removeCharacter: (state, action) => {
-        //     state.randomWord = action.payload
-        // }
+        
     }
 })
 

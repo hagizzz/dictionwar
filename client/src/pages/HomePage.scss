@@ -1,0 +1,67 @@
+body {
+    background-color: #fdeef1;
+}
+#container {
+    font-family: 'Josefin Sans', sans-serif, cursive;
+
+    #motion-demo {
+        offset-path: path("M340 620A400 400 0 1 1 1140 620A400 400 0 1 1 340 620");
+        animation: move 20s infinite normal linear;
+        transform: translateY(-60px);
+        background-image: url('../assets/img/clown-fish2.gif');
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        
+        @keyframes move {
+            0% {
+              offset-distance: 9%;
+            }
+            100% {
+              offset-distance: 40%;
+            }
+        }
+    }
+      
+    
+  
+    path {
+        fill: transparent;
+    }
+    
+    text {
+        fill: #f7cfc8;
+        font-size: 40px;
+    }
+
+    a {
+        display: block;
+        text-decoration: none;
+        border: 1px solid #f7cfc8;
+        border-radius: 10px;
+        color: #de7c6d;
+        font-size: bold;
+        font-family: "Luckiest Guy", cursive;
+        font-size: 24px;
+        margin: 0 auto;
+        width: 100px;
+        text-align: center;
+        margin-top: 10px;
+        padding: 10px 60px;
+        box-shadow: 4px 4px #e6d9d9;
+        background-color: #FFF5E0;
+
+        &:hover {
+            background-color: #4d84c8;
+            color: #f7cfc8;
+            transform: translate(0.05em, 0.1em);
+            box-shadow: 3px 2px #e6d9d9;
+        }
+
+        &:active {
+            transform: translate(0.15em, 0.2em);
+            box-shadow: 0 0 0.4em -0.4em var(--hover);
+        }
+    }
+}
+
